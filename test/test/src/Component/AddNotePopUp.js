@@ -7,7 +7,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(null); // Initialize as null
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -23,7 +23,9 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   };
 
   const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
+    // Get the selected category ID from the event's target value
+    const selectedCategoryId = e.target.value;
+    setCategory(selectedCategoryId);
   };
 
   const handleSubmit = () => {
@@ -33,7 +35,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
     axios
       .post("https://localhost:44317/api/Note/", {
         userId: 1,
-        // category,
+        categoryId: parseInt(category),
         title,
         content,
         image,
@@ -78,7 +80,6 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
             />
           </div>
 
-          {/* Dropdown (select box) for Category */}
           <div className="message-box">
             <label>Category</label>
             <select
