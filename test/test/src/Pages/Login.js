@@ -21,10 +21,6 @@ function Login() {
       return;
     }
 
-    axios.post("https://localhost:44317/api/user/Login/", {
-      Email,
-      Password,
-    });
     axios
       .post("https://localhost:44317/api/user/Login/", {
         Email,

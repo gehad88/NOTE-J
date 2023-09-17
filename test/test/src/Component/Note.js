@@ -1,8 +1,6 @@
 import React from "react";
 
 function Note({ note }) {
-  console.log("my notes", note);
-
   return (
     <div className="box">
       <div className="img-box">
