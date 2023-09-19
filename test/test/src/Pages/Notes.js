@@ -3,16 +3,25 @@ import Menu from "../Component/Menu";
 import Footer from "../Component/Footer";
 import Note from "../Component/Note";
 import AddNotePopup from "../Component/AddNotePopUp";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 function Notes() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isUserSignedIn, setIsUserSignedIn] = useState(true); // Initialize with a default value
 
   useEffect(() => {
     fetch("https://localhost:44317/api/Note/")
       .then((res) => res.json())
       .then((data) => setNotes(data));
   }, [notes]);
+
+  useEffect(() => {
+    // Check if the user is signed in by reading the userId cookie
+    const userIdCookie = Cookies.get("userId");
+    setIsUserSignedIn(!!userIdCookie); // Convert the value to boolean
+  }, []); // This effect runs only once on component mount
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -28,6 +37,15 @@ function Notes() {
     // For example, you can update the 'notes' state with the new note
     setNotes([...notes, newNote]);
   };
+
+  // Use the useNavigate hook to programmatically navigate the user
+  const navigate = useNavigate();
+
+  // Check if the user is not signed in and redirect them to the login page
+  if (!isUserSignedIn) {
+    navigate("/Login");
+    return null; // Return null to prevent rendering the rest of the component
+  }
 
   return (
     <Fragment>

@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
 import Popup from "reactjs-popup";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState(null); // Initialize as null
+  const [category, setCategory] = useState("");
+  const userIdCookie = Cookies.get("userId");
+
+  const currentDate = new Date();
+  currentDate.setUTCHours(currentDate.getUTCHours() + 1); // Adjust for Egypt's UTC+2 offset
+
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const day = String(currentDate.getDate()).padStart(2, "0");
+  const hours = String(currentDate.getUTCHours()).padStart(2, "0");
+  const minutes = String(currentDate.getUTCMinutes()).padStart(2, "0");
+  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -23,27 +35,22 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   };
 
   const handleCategoryChange = (e) => {
-    // Get the selected category ID from the event's target value
     const selectedCategoryId = e.target.value;
     setCategory(selectedCategoryId);
   };
 
   const handleSubmit = () => {
-    // Create a new note object
-
-    // Send a POST request to add the new note to the server
     axios
       .post("https://localhost:44317/api/Note/", {
-        userId: 1,
+        userId: parseInt(userIdCookie),
         categoryId: parseInt(category),
         title,
         content,
         image,
+        createdAt: formattedDate,
       })
       .then((response) => {
         console.log("Note added successfully:", response.data);
-        // Call the onAddNote function to update the UI with the new note
-        console.log(1, category, title, content, image);
         // Reset form fields and close the popup
         setTitle("");
         setContent("");
@@ -53,9 +60,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
       })
       .catch((error) => {
         console.error("Error adding note:", error);
-        console.log(1, category, title, content, image);
-
-        // Handle any errors that occur during the POST request
+        console.log(userIdCookie, category, title, content, image);
       });
   };
 
@@ -69,31 +74,42 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
     <Popup open={isOpen} onClose={onClose} modal nested>
       {(close) => (
         <div className="popup">
-          <h2>Add New Note</h2>
           <div className="message-box">
-            <label>Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={handleTitleChange}
-              className="input-field"
-            />
-          </div>
-
-          <div className="message-box">
-            <label>Category</label>
-            <select
-              value={category}
-              onChange={handleCategoryChange}
-              className="input-field"
-            >
-              <option value="">Select a category</option>
-              {categories.map((cat) => (
-                <option key={cat.categoryId} value={cat.categoryId}>
-                  {cat.categoryName}
-                </option>
-              ))}
-            </select>
+            <div className="input-row">
+              <div className="input-half">
+                <label>Title</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={handleTitleChange}
+                  className="input-field"
+                />
+              </div>
+              <div className="input-half">
+                <label>Category</label>
+                <select
+                  value={category}
+                  onChange={handleCategoryChange}
+                  className="input-field"
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.categoryId} value={cat.categoryId}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-half">
+                <label>Date/Time</label>
+                <input
+                  type="text"
+                  value={formattedDate.slice(0, 16)}
+                  readOnly
+                  className="input-field"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="input-group">
@@ -101,7 +117,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
             <textarea
               value={content}
               onChange={handleContentChange}
-              className="input-field"
+              className="input-field content-textarea"
             />
           </div>
 

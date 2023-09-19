@@ -1,9 +1,22 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import Menu from "../Component/Menu";
 import Footer from "../Component/Footer";
 import Category from "../Component/Category";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Cookies from "js-cookie"; // Import Cookies
 
 function Categories() {
+  const navigate = useNavigate(); // Initialize navigate
+
+  useEffect(() => {
+    // Check if the user cookie is present
+    const userCookie = Cookies.get("userId");
+    if (!userCookie) {
+      // If the user cookie is not found, redirect to the login page or another appropriate page
+      navigate("/Login");
+    }
+  }, [navigate]);
+
   return (
     <Fragment>
       <Menu />

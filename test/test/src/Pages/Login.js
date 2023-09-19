@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 function Login() {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
   let navigate = useNavigate();
 
@@ -28,29 +27,18 @@ function Login() {
       })
       .then((res) => {
         if (res.data.email === Email && res.data.passwordHash === Password) {
-          Cookies.set("user", "signed_in");
-          setIsUserSignedIn(true);
-          console.log(isUserSignedIn);
-          navigate("/", { state: { isUserSignedIn: true } });
-          console.log(isUserSignedIn);
-
-          alert("Login successful!"); // Change the alert message
+          Cookies.set("userId", res.data.userId); // Set the userId cookie
+          navigate("/");
+          alert("Login successful!");
         } else {
-          alert("Invalid credentials"); // Handle invalid login
+          alert("Invalid credentials");
         }
       })
       .catch((error) => {
-        navigate("/NotFound");
+        alert("This account does not exist, try again?");
       });
   };
 
-  // const handleSignOut = () => {
-  //   // Remove the user cookie to sign them out.
-  //   Cookies.remove("user");
-
-  //   // Update the state to reflect that the user is signed out.
-  //   setIsUserSignedIn(false);
-  // };
   return (
     <div>
       <Menu />

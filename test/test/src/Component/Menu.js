@@ -2,21 +2,21 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
-function Menu({ ProfileImage, ShowOptions }) {
+function Menu({ ProfileImage }) {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
   useEffect(() => {
     // Check if the user is already signed in by reading a cookie.
-    const userCookie = Cookies.get("user");
-    if (userCookie === "signed_in") {
+    const userIdCookie = Cookies.get("userId");
+    if (userIdCookie) {
       setIsUserSignedIn(true);
     }
   }, []);
 
   // Function to handle log out
   const handleLogout = () => {
-    // Remove the user cookie and update the state
-    Cookies.remove("user");
+    // Remove the userId cookie and update the state
+    Cookies.remove("userId");
     setIsUserSignedIn(false);
   };
 
@@ -78,9 +78,6 @@ function Menu({ ProfileImage, ShowOptions }) {
             </div>
             <div className="quote_btn-container">
               {isUserSignedIn ? (
-                // <button className="login-btn" onClick={handleLogout}>
-                //   Log Out
-                // </button>
                 <Link to="/" className="login-btn">
                   <span onClick={handleLogout}>Log Out</span>
                   <i
