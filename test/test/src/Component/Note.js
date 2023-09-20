@@ -1,20 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Styles/Trash.css";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import NoteDetails from "./NoteDetails";
+import "../Component/Styles/ReadMoreButton.css";
 
-function Note({ note }) {
+function Note({ note, onDeleteNote }) {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isUserSignedIn, setIsUserSignedIn] = useState(true);
+
+  useEffect(() => {
+    const userIdCookie = Cookies.get("userId");
+    setIsUserSignedIn(!!userIdCookie);
+  }, []); // This effect runs only once on component mount
+
+  const navigate = useNavigate();
+
+  if (!isUserSignedIn) {
+    navigate("/NotFound");
+    return null;
+  }
+
   const deleteNote = () => {
     Swal.fire({
-      title: `Are You Sure Want To Delete ${note.title} ?`,
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
       showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then((data) => {
       if (data.isConfirmed) {
         fetch(`https://localhost:44317/api/Note/${note.noteId}`, {
           method: "DELETE",
-        }).then((res) => res.json());
+        })
+          .then((res) => res.json())
+          .then(() => {
+            // Call the onDeleteNote callback with the noteId to remove it from the state
+            onDeleteNote(note.noteId);
+          })
+          .catch((error) => {
+            console.error("Error deleting note:", error);
+          });
       }
     });
   };
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <div className="box">
       <div className="img-box">
@@ -28,7 +69,9 @@ function Note({ note }) {
             : note.content}
         </p>
         <div className="button-container">
-          <a href="/">Read More</a>
+          <button className="button-5" onClick={openPopup}>
+            Read More
+          </button>
           <button
             onClick={deleteNote}
             style={{ border: "none" }}
@@ -47,6 +90,7 @@ function Note({ note }) {
             </svg>
           </button>
         </div>
+        <NoteDetails note={note} isOpen={isPopupOpen} onClose={closePopup} />
       </div>
     </div>
   );

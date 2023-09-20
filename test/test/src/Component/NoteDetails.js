@@ -4,24 +4,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 
-const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
-  console.log("AddNotePopup");
+const NoteDetails = ({ isOpen, onClose, note }) => {
+  console.log("NoteDetails");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
   const userIdCookie = Cookies.get("userId");
-
-  const currentDate = new Date();
-  currentDate.setUTCHours(currentDate.getUTCHours() + 1); // Adjust for Egypt's UTC+2 offset
-
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-  const day = String(currentDate.getDate()).padStart(2, "0");
-  const hours = String(currentDate.getUTCHours()).padStart(2, "0");
-  const minutes = String(currentDate.getUTCMinutes()).padStart(2, "0");
-  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -42,17 +32,14 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   };
 
   const handleSubmit = () => {
-    const newNoteData = {
-      userId: parseInt(userIdCookie),
-      categoryId: parseInt(category),
-      title,
-      content,
-      image,
-      createdAt: formattedDate,
-    };
-
     axios
-      .post("https://localhost:44317/api/Note/", newNoteData)
+      .put("https://localhost:44317/api/Note/", {
+        userId: parseInt(userIdCookie),
+        categoryId: parseInt(category),
+        title,
+        content,
+        image,
+      })
       .then((response) => {
         console.log("Note added successfully:", response.data);
         // Reset form fields and close the popup
@@ -68,7 +55,6 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
         setImage(null);
         setCategory("");
         onClose();
-        onAddNote(newNoteData);
       })
       .catch((error) => {
         console.error("Error adding note:", error);
@@ -92,7 +78,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
                 <label>Title</label>
                 <input
                   type="text"
-                  value={title}
+                  value={note.title}
                   onChange={handleTitleChange}
                   className="input-field"
                 />
@@ -100,8 +86,11 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
               <div className="input-half">
                 <label>Category</label>
                 <select
-                  value={category}
-                  onChange={handleCategoryChange}
+                  value={note.categoryId}
+                  onChange={(e) => {
+                    note.categoryId = e.target.value;
+                    handleCategoryChange(e);
+                  }}
                   className="input-field"
                 >
                   <option value="">Select a category</option>
@@ -116,7 +105,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
                 <label>Date/Time</label>
                 <input
                   type="text"
-                  value={formattedDate.slice(0, 16)}
+                  value={note.createdAt.slice(0, 16)}
                   readOnly
                   className="input-field"
                 />
@@ -127,7 +116,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
           <div className="input-group">
             <label>Content</label>
             <textarea
-              value={content}
+              value={note.content}
               onChange={handleContentChange}
               className="input-field content-textarea"
             />
@@ -146,7 +135,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
 
           <div className="button-group">
             <button onClick={handleSubmit} className="btn btn-primary">
-              Add Note
+              Edit Note
             </button>
             <button onClick={close} className="btn btn-secondary">
               Cancel
@@ -159,4 +148,4 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   );
 };
 
-export default AddNotePopup;
+export default NoteDetails;

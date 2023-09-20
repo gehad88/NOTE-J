@@ -7,6 +7,7 @@ import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import NotFound from "./Pages/NotFound";
+import NoteDetails from "./Component/NoteDetails";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/Login" element={<Login />}></Route>
           <Route path="/Signup" element={<SignUp />}></Route>
           <Route path="/NotFound" element={<NotFound />}></Route>
+          <Route path="/Notes/NoteDetails/:noteId" element={<NoteDetails />} />
         </Routes>
       </Router>
     </div>

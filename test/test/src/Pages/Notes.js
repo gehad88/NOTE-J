@@ -5,17 +5,23 @@ import Note from "../Component/Note";
 import AddNotePopup from "../Component/AddNotePopUp";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import "../Component/Styles/AddNoteButton.css";
 
 function Notes() {
+  console.log("notes");
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isUserSignedIn, setIsUserSignedIn] = useState(true); // Initialize with a default value
+  const [isUserSignedIn, setIsUserSignedIn] = useState(true);
+  const deleteNote = (noteIdToRemove) => {
+    const updatedNotes = notes.filter((note) => note.noteId !== noteIdToRemove);
+    setNotes(updatedNotes);
+  };
 
   useEffect(() => {
     fetch("https://localhost:44317/api/Note/")
       .then((res) => res.json())
       .then((data) => setNotes(data));
-  }, [notes]);
+  }, []);
 
   useEffect(() => {
     // Check if the user is signed in by reading the userId cookie
@@ -32,9 +38,6 @@ function Notes() {
   };
 
   const addNote = (newNote) => {
-    // Define the logic to add a new note here
-    // This function should handle the addition of the new note to your state or API
-    // For example, you can update the 'notes' state with the new note
     setNotes([...notes, newNote]);
   };
 
@@ -57,15 +60,19 @@ function Notes() {
           </div>
           <div className="row">
             <div className="col-md-12">
-              <button className="btn btn-primary" onClick={openPopup}>
+              <button className="button-86" onClick={openPopup}>
                 Add Note
               </button>
             </div>
           </div>
           <div className="row">
             {notes.map((note) => (
-              <div key={note.noteId} className="col-md-6 col-lg-4">
-                <Note note={note} />
+              <div key={`note_${note.noteId}`} className="col-md-6 col-lg-4">
+                <Note
+                  key={`note_${note.noteId}`}
+                  note={note}
+                  onDeleteNote={deleteNote}
+                />
               </div>
             ))}
           </div>
