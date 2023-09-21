@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import NoteDetails from "./NoteDetails";
 import "../Component/Styles/ReadMoreButton.css";
 
-function Note({ note, onDeleteNote }) {
+function Note({ note, onDeleteNote, onUpdateNotes }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(true);
 
@@ -90,7 +90,12 @@ function Note({ note, onDeleteNote }) {
             </svg>
           </button>
         </div>
-        <NoteDetails note={note} isOpen={isPopupOpen} onClose={closePopup} />
+        <NoteDetails
+          note={note}
+          isOpen={isPopupOpen}
+          onClose={closePopup}
+          onUpdateNote={onUpdateNotes} // Pass the callback here
+        />
       </div>
     </div>
   );

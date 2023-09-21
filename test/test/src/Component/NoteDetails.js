@@ -4,13 +4,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 
-const NoteDetails = ({ isOpen, onClose, note }) => {
+const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
   console.log("NoteDetails");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(note.title);
+  const [content, setContent] = useState(note.content);
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(note.categoryId); // Initialize category with the current category
   const userIdCookie = Cookies.get("userId");
 
   const handleTitleChange = (e) => {
@@ -28,20 +28,33 @@ const NoteDetails = ({ isOpen, onClose, note }) => {
 
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
-    setCategory(selectedCategoryId);
+    setCategory(selectedCategoryId); // Update the category state
   };
 
   const handleSubmit = () => {
     axios
-      .put("https://localhost:44317/api/Note/", {
+      .put(`https://localhost:44317/api/Note/${note.noteId}`, {
+        noteId: note.noteId,
         userId: parseInt(userIdCookie),
         categoryId: parseInt(category),
         title,
+        createdAt: note.createdAt,
         content,
         image,
       })
       .then((response) => {
-        console.log("Note added successfully:", response.data);
+        console.log("Note edited successfully:", response.data);
+
+        // Create a new note object with the updated title and category
+        const updatedNote = {
+          ...note, // Copy the existing note properties
+          title, // Update the title
+          content,
+          categoryId: parseInt(category), // Update the category
+        };
+
+        onUpdateNote(updatedNote); // Call the callback with the edited note data
+
         // Reset form fields and close the popup
         Swal.fire({
           position: "top-end",
@@ -50,14 +63,11 @@ const NoteDetails = ({ isOpen, onClose, note }) => {
           showConfirmButton: false,
           timer: 1600,
         });
-        setTitle("");
-        setContent("");
-        setImage(null);
-        setCategory("");
+
         onClose();
       })
       .catch((error) => {
-        console.error("Error adding note:", error);
+        console.error("Error editing note:", error);
         console.log(userIdCookie, category, title, content, image);
       });
   };
@@ -78,7 +88,7 @@ const NoteDetails = ({ isOpen, onClose, note }) => {
                 <label>Title</label>
                 <input
                   type="text"
-                  value={note.title}
+                  value={title}
                   onChange={handleTitleChange}
                   className="input-field"
                 />
@@ -86,11 +96,8 @@ const NoteDetails = ({ isOpen, onClose, note }) => {
               <div className="input-half">
                 <label>Category</label>
                 <select
-                  value={note.categoryId}
-                  onChange={(e) => {
-                    note.categoryId = e.target.value;
-                    handleCategoryChange(e);
-                  }}
+                  value={category} // Use the updated category state
+                  onChange={handleCategoryChange}
                   className="input-field"
                 >
                   <option value="">Select a category</option>
@@ -116,7 +123,7 @@ const NoteDetails = ({ isOpen, onClose, note }) => {
           <div className="input-group">
             <label>Content</label>
             <textarea
-              value={note.content}
+              value={content}
               onChange={handleContentChange}
               className="input-field content-textarea"
             />

@@ -16,6 +16,13 @@ function Notes() {
     const updatedNotes = notes.filter((note) => note.noteId !== noteIdToRemove);
     setNotes(updatedNotes);
   };
+  const updateNotes = (editedNote) => {
+    // Update the notes state with the edited note
+    const updatedNotes = notes.map((note) =>
+      note.noteId === editedNote.noteId ? editedNote : note
+    );
+    setNotes(updatedNotes);
+  };
 
   useEffect(() => {
     fetch("https://localhost:44317/api/Note/")
@@ -72,6 +79,7 @@ function Notes() {
                   key={`note_${note.noteId}`}
                   note={note}
                   onDeleteNote={deleteNote}
+                  onUpdateNotes={updateNotes} // Pass the callback here
                 />
               </div>
             ))}
@@ -82,6 +90,7 @@ function Notes() {
         isOpen={isPopupOpen}
         onClose={closePopup}
         onAddNote={addNote}
+        onUpdateNote={updateNotes}
       />
       <Footer />
     </Fragment>
