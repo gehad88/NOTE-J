@@ -42,9 +42,11 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   };
 
   const handleSubmit = () => {
+    const categoryIdToSend = category ? parseInt(category) : 61; // Replace 1 with your desired default category ID
+
     const newNoteData = {
       userId: parseInt(userIdCookie),
-      categoryId: parseInt(category),
+      categoryId: categoryIdToSend,
       title,
       content,
       image,

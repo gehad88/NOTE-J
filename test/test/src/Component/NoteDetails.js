@@ -28,16 +28,22 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
 
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
-    setCategory(selectedCategoryId); // Update the category state
+    // Only update the category state if a valid category is selected (not an empty string)
+    if (selectedCategoryId !== "") {
+      setCategory(selectedCategoryId);
+    }
   };
+
   console.log("Note ID before PUT request:", note.noteId);
 
   const handleSubmit = () => {
+    const categoryIdToSend = category ? parseInt(category) : 61; // Replace 1 with your desired default category ID
+
     axios
       .put(`https://localhost:44317/api/Note/${note.noteId}`, {
         noteId: note.noteId,
         userId: parseInt(userIdCookie),
-        categoryId: parseInt(category),
+        categoryId: categoryIdToSend,
         title,
         createdAt: note.createdAt,
         content,
@@ -46,17 +52,15 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
       .then((response) => {
         console.log("Note edited successfully:", response.data);
 
-        // Create a new note object with the updated title and category
         const updatedNote = {
-          ...note, // Copy the existing note properties
-          title, // Update the title
+          ...note,
+          title,
           content,
-          categoryId: parseInt(category), // Update the category
+          categoryId: categoryIdToSend,
         };
 
-        onUpdateNote(updatedNote); // Call the callback with the edited note data
+        onUpdateNote(updatedNote);
 
-        // Reset form fields and close the popup
         Swal.fire({
           position: "top-end",
           icon: "success",
