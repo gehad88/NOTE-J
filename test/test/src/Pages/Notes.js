@@ -12,12 +12,12 @@ function Notes() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(true);
+
   const deleteNote = (noteIdToRemove) => {
     const updatedNotes = notes.filter((note) => note.noteId !== noteIdToRemove);
     setNotes(updatedNotes);
   };
   const updateNotes = (editedNote) => {
-    // Update the notes state with the edited note
     const updatedNotes = notes.map((note) =>
       note.noteId === editedNote.noteId ? editedNote : note
     );
@@ -31,10 +31,9 @@ function Notes() {
   }, []);
 
   useEffect(() => {
-    // Check if the user is signed in by reading the userId cookie
     const userIdCookie = Cookies.get("userId");
-    setIsUserSignedIn(!!userIdCookie); // Convert the value to boolean
-  }, []); // This effect runs only once on component mount
+    setIsUserSignedIn(!!userIdCookie);
+  }, []);
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -42,19 +41,19 @@ function Notes() {
 
   const closePopup = () => {
     setIsPopupOpen(false);
+    document.body.focus();
   };
 
   const addNote = (newNote) => {
     setNotes([...notes, newNote]);
+    window.location.reload();
   };
 
-  // Use the useNavigate hook to programmatically navigate the user
   const navigate = useNavigate();
 
-  // Check if the user is not signed in and redirect them to the login page
   if (!isUserSignedIn) {
     navigate("/Login");
-    return null; // Return null to prevent rendering the rest of the component
+    return null;
   }
 
   return (
@@ -79,7 +78,7 @@ function Notes() {
                   key={`note_${note.noteId}`}
                   note={note}
                   onDeleteNote={deleteNote}
-                  onUpdateNotes={updateNotes} // Pass the callback here
+                  onUpdateNotes={updateNotes}
                 />
               </div>
             ))}

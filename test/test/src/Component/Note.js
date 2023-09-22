@@ -13,7 +13,7 @@ function Note({ note, onDeleteNote, onUpdateNotes }) {
   useEffect(() => {
     const userIdCookie = Cookies.get("userId");
     setIsUserSignedIn(!!userIdCookie);
-  }, []); // This effect runs only once on component mount
+  }, []);
 
   const navigate = useNavigate();
 
@@ -54,6 +54,7 @@ function Note({ note, onDeleteNote, onUpdateNotes }) {
 
   const closePopup = () => {
     setIsPopupOpen(false);
+    document.activeElement.blur(); // Remove focus from the currently focused element
   };
 
   return (
@@ -81,7 +82,7 @@ function Note({ note, onDeleteNote, onUpdateNotes }) {
               xmlns="http://www.w3.org/2000/svg"
               width="30"
               height="40"
-              style={{ fill: "red" }} // Set the fill color to red
+              style={{ fill: "red" }}
               className="bi bi-trash"
               viewBox="0 0 16 16"
             >
@@ -94,7 +95,7 @@ function Note({ note, onDeleteNote, onUpdateNotes }) {
           note={note}
           isOpen={isPopupOpen}
           onClose={closePopup}
-          onUpdateNote={onUpdateNotes} // Pass the callback here
+          onUpdateNote={onUpdateNotes}
         />
       </div>
     </div>

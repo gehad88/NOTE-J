@@ -30,6 +30,7 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
     const selectedCategoryId = e.target.value;
     setCategory(selectedCategoryId); // Update the category state
   };
+  console.log("Note ID before PUT request:", note.noteId);
 
   const handleSubmit = () => {
     axios
