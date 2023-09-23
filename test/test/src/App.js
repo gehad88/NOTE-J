@@ -7,7 +7,7 @@ import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import NotFound from "./Pages/NotFound";
-import NoteDetails from "./Component/NoteDetails";
+import NoteDetails from "./Component/NOTE/NoteDetails";
 
 function App() {
   return (

@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Menu from "../Component/Menu";
 import Footer from "../Component/Footer";
-import Note from "../Component/Note";
-import AddNotePopup from "../Component/AddNotePopUp";
+import Note from "../Component/NOTE/Note";
+import AddNotePopup from "../Component/NOTE/AddNotePopUp";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import "../Component/Styles/AddNoteButton.css";
@@ -12,6 +12,7 @@ function Notes() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(true);
+  const cookie = Cookies.get("userId");
 
   const deleteNote = (noteIdToRemove) => {
     const updatedNotes = notes.filter((note) => note.noteId !== noteIdToRemove);
@@ -25,10 +26,10 @@ function Notes() {
   };
 
   useEffect(() => {
-    fetch("https://localhost:44317/api/Note/")
+    fetch(`https://localhost:44317/api/Note/${cookie}`)
       .then((res) => res.json())
       .then((data) => setNotes(data));
-  }, []);
+  }, [cookie]);
 
   useEffect(() => {
     const userIdCookie = Cookies.get("userId");
@@ -89,7 +90,6 @@ function Notes() {
         isOpen={isPopupOpen}
         onClose={closePopup}
         onAddNote={addNote}
-        onUpdateNote={updateNotes}
       />
       <Footer />
     </Fragment>
