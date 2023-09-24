@@ -30,7 +30,6 @@ const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
       .post("https://localhost:44317/api/Category/", newCatData)
       .then((response) => {
         console.log("Note added successfully:", response.data);
-        // Reset form fields and close the popup
         Swal.fire({
           position: "top-end",
           icon: "success",

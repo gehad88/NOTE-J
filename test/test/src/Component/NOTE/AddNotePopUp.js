@@ -14,7 +14,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   const userIdCookie = Cookies.get("userId");
 
   const currentDate = new Date();
-  currentDate.setUTCHours(currentDate.getUTCHours() + 1); // Adjust for Egypt's UTC+2 offset
+  currentDate.setUTCHours(currentDate.getUTCHours() + 1);
 
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -22,6 +22,31 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   const hours = String(currentDate.getUTCHours()).padStart(2, "0");
   const minutes = String(currentDate.getUTCMinutes()).padStart(2, "0");
   const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+  useEffect(() => {
+    const fetchData = () => {
+      if (userIdCookie) {
+        axios
+          .post(
+            "https://localhost:44317/api/category/GETDEFAULTCATEGORY",
+            JSON.stringify({ userId: parseInt(userIdCookie) }),
+            {
+              headers: {
+                "Content-Type": "application/json", // Specify JSON content type
+              },
+            }
+          )
+          .then((response) => {
+            setCategory(response.data);
+          })
+          .catch((error) => {
+            console.error("Error with AXIOS", userIdCookie);
+          });
+      }
+    };
+
+    fetchData(); // Call the function when userIdCookie is available
+  }, [userIdCookie]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -38,7 +63,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
 
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
-    setCategory(selectedCategoryId);
+    if (selectedCategoryId === !"") setCategory(selectedCategoryId);
   };
 
   const handleSubmit = () => {

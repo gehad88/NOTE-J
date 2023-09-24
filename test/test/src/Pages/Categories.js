@@ -50,9 +50,7 @@ function Categories() {
   const addCategory = (newCategory) => {
     setCategories([...categories, newCategory]);
     setIsPopupOpen(false);
-    console.log(
-      "WTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTFFFFFFFFFFFF"
-    );
+
     window.location.reload();
   };
 

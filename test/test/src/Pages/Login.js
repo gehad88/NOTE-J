@@ -1,16 +1,29 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Menu from "../Component/Menu";
 import Footer from "../Component/Footer";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 function Login() {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    const userIdCookie = Cookies.get("userId");
+    if (userIdCookie) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -26,16 +39,41 @@ function Login() {
         Password,
       })
       .then((res) => {
-        if (res.data.email === Email && res.data.passwordHash === Password) {
-          Cookies.set("userId", res.data.userId); // Set the userId cookie
+        if (res.status === 200) {
+          Cookies.set("userId", res.data.userId);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: "success",
+            title: "Signed in successfully",
+          });
           navigate("/");
-          alert("Login successful!");
         } else {
-          alert("Invalid credentials");
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+            footer: '<a href="">Why do I have this issue?</a>',
+          });
         }
       })
       .catch((error) => {
-        alert("This account does not exist, try again?");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "This account does not exist, try again ?!",
+          timer: 1500,
+        });
       });
   };
 
