@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import "../Styles/AddButton.css";
 
 const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
   console.log("AddNotePopup");
@@ -78,13 +79,18 @@ const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
           <br />
 
           <div className="button-group">
-            <button onClick={handleSubmit} className="btn btn-primary">
+            <button onClick={handleSubmit} className="button-1">
               Add Category
             </button>
-            <button onClick={close} className="btn btn-secondary">
+            <button
+              onClick={close}
+              className="btn btn-secondary"
+              style={{ marginLeft: "10px" }}
+            >
               Cancel
             </button>
           </div>
+
           <br />
         </div>
       )}
