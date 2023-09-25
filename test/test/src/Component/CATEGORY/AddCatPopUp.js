@@ -21,6 +21,13 @@ const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
   };
 
   const handleSubmit = () => {
+    if (!title.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Title cannot be empty",
+      });
+      return;
+    }
     const newCatData = {
       userId: parseInt(userIdCookie),
       categoryName: title,

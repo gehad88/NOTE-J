@@ -6,6 +6,7 @@ import AddNotePopup from "../Component/NOTE/AddNotePopUp";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import "../Component/Styles/AddNoteButton.css";
+import img3 from "../Component/Styles/Images/search (2).png";
 
 function Notes() {
   console.log("notes");
@@ -64,6 +65,16 @@ function Notes() {
         <div className="container">
           <div className="heading_container">
             <h2>Your Notes</h2>
+            <div className="search-box">
+              <button className="btn-search">
+                <img src={img3} style={{ width: "30px" }} alt="Search" />
+              </button>
+              <input
+                type="text"
+                class="input-search"
+                placeholder="Type to Search..."
+              />
+            </div>
           </div>
           <div className="row">
             <div className="col-md-12">

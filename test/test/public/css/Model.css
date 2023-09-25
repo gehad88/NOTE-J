@@ -1,8 +1,8 @@
 .popup-content {
     margin: auto;
     background: rgb(255, 255, 255);
-    width: 50%;
-    padding: 5px;
+    width: 80%;
+    padding: 4px;
 }
 
 .popup-arrow {
@@ -10,7 +10,7 @@
 }
 
 [role='tooltip'].popup-content {
-    width: 200px;
+    width: 400px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
 }
 
@@ -46,3 +46,23 @@
 }
 
 /* Add more styles as needed */
+.input-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* Vertically center the label and input */
+    gap: 16px;
+    /* Adjust the gap as needed */
+}
+
+/* AddNotePopup.css */
+.content-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    /* Increase the height as needed */
+    height: 330px;
+    /* Adjust the height as desired */
+}

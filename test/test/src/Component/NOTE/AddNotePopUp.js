@@ -68,12 +68,12 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   };
 
   const handleSubmit = () => {
-    const categoryIdToSend = category ? parseInt(category) : 61; // Replace 1 with your desired default category ID
-
+    const newTitle = title.length === 0 ? "No Title" : title;
+    alert(title.length);
     const newNoteData = {
       userId: parseInt(userIdCookie),
-      categoryId: categoryIdToSend,
-      title,
+      categoryId: category,
+      title: newTitle,
       content,
       image,
       createdAt: formattedDate,
