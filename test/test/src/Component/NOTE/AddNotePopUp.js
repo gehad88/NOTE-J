@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import "../Styles/AddButton.css";
+import "../Styles/PopUp.css";
 
 const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   console.log("AddNotePopup");
@@ -13,6 +14,10 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
   const userIdCookie = Cookies.get("userId");
+
+  ////////////////////////
+  const MAX_TITLE_LENGTH = 24;
+  const MAX_CONTENT_LENGTH = 5000;
 
   const currentDate = new Date();
   currentDate.setUTCHours(currentDate.getUTCHours() + 1);
@@ -64,17 +69,19 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
 
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
-    if (selectedCategoryId === !"") setCategory(selectedCategoryId);
+    if (selectedCategoryId !== "") {
+      setCategory(selectedCategoryId);
+    }
   };
 
   const handleSubmit = () => {
     const newTitle = title.length === 0 ? "No Title" : title;
-    alert(title.length);
+    const newContent = content.length === 0 ? "Empty" : content;
     const newNoteData = {
       userId: parseInt(userIdCookie),
-      categoryId: category,
+      categoryId: parseInt(category),
       title: newTitle,
-      content,
+      content: newContent,
       image,
       createdAt: formattedDate,
     };
@@ -83,7 +90,6 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
       .post("https://localhost:44317/api/Note/", newNoteData)
       .then((response) => {
         console.log("Note added successfully:", response.data);
-        // Reset form fields and close the popup
         Swal.fire({
           position: "top-end",
           icon: "success",
@@ -114,7 +120,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
     <Popup open={isOpen} onClose={onClose} modal nested>
       {(close) => (
         <div className="popup">
-          <div className="message-box">
+          <div className="message-box custom-message-box">
             <div className="input-row">
               <div className="input-half">
                 <label>Title</label>
@@ -123,6 +129,7 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
                   value={title}
                   onChange={handleTitleChange}
                   className="input-field"
+                  maxLength={MAX_TITLE_LENGTH}
                 />
               </div>
               <div className="input-half">
@@ -150,41 +157,45 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
                 />
               </div>
             </div>
-          </div>
 
-          <div className="input-group">
-            <label>Content</label>
-            <textarea
-              value={content}
-              onChange={handleContentChange}
-              className="input-field content-textarea"
-            />
-          </div>
+            <div className="input-group">
+              <label>Content</label>
+              <textarea
+                value={content}
+                onChange={handleContentChange}
+                className="input-field content-textarea"
+                maxLength={MAX_CONTENT_LENGTH}
+              />
+              <div className="char-count">
+                {content.length}/{MAX_CONTENT_LENGTH}
+              </div>
+            </div>
 
-          <div className="input-group">
-            <label>Upload Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="input-field"
-            />
-          </div>
-          <br />
+            <div className="input-group">
+              <label>Upload Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="input-field"
+              />
+            </div>
+            <br />
 
-          <div className="button-group">
-            <button onClick={handleSubmit} className="button-1">
-              Add Note
-            </button>
-            <button
-              onClick={close}
-              className="btn btn-secondary"
-              style={{ marginLeft: "10px" }}
-            >
-              Cancel
-            </button>
+            <div className="button-group">
+              <button onClick={handleSubmit} className="button-1">
+                Add Note
+              </button>
+              <button
+                onClick={close}
+                className="btn btn-secondary"
+                style={{ marginLeft: "10px" }}
+              >
+                Cancel
+              </button>
+            </div>
+            <br />
           </div>
-          <br />
         </div>
       )}
     </Popup>

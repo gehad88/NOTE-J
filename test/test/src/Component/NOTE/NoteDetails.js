@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import "../Styles/AddButton.css";
 
 const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
   console.log("NoteDetails");
@@ -10,8 +11,13 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
   const [content, setContent] = useState(note.content);
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState(note.categoryId); // Initialize category with the current category
+  const [category, setCategory] = useState(note.categoryId);
   const userIdCookie = Cookies.get("userId");
+
+  ///////////////////////////
+
+  const MAX_TITLE_LENGTH = 24;
+  const MAX_CONTENT_LENGTH = 5000;
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -28,7 +34,6 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
 
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
-    // Only update the category state if a valid category is selected (not an empty string)
     if (selectedCategoryId !== "") {
       setCategory(selectedCategoryId);
     }
@@ -87,7 +92,7 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
     <Popup open={isOpen} onClose={onClose} modal nested>
       {(close) => (
         <div className="popup">
-          <div className="message-box">
+          <div className="message-box" style={{ height: "29px" }}>
             <div className="input-row">
               <div className="input-half">
                 <label>Title</label>
@@ -96,12 +101,13 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
                   value={title}
                   onChange={handleTitleChange}
                   className="input-field"
+                  maxLength={MAX_TITLE_LENGTH}
                 />
               </div>
               <div className="input-half">
                 <label>Category</label>
                 <select
-                  value={category} // Use the updated category state
+                  value={category}
                   onChange={handleCategoryChange}
                   className="input-field"
                 >
@@ -124,6 +130,7 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
               </div>
             </div>
           </div>
+          <br />
 
           <div className="input-group">
             <label>Content</label>
@@ -131,7 +138,11 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
               value={content}
               onChange={handleContentChange}
               className="input-field content-textarea"
+              maxLength={MAX_CONTENT_LENGTH}
             />
+            <div className="char-count">
+              {content.length}/{MAX_CONTENT_LENGTH}
+            </div>
           </div>
 
           <div className="input-group">
@@ -146,10 +157,14 @@ const NoteDetails = ({ isOpen, onClose, note, onUpdateNote }) => {
           <br />
 
           <div className="button-group">
-            <button onClick={handleSubmit} className="btn btn-primary">
+            <button onClick={handleSubmit} className="button-1">
               Edit Note
             </button>
-            <button onClick={close} className="btn btn-secondary">
+            <button
+              onClick={close}
+              className="btn btn-secondary"
+              style={{ marginLeft: "10px" }}
+            >
               Cancel
             </button>
           </div>

@@ -38,7 +38,6 @@ function Note({ note, onDeleteNote, onUpdateNotes }) {
         })
           .then((res) => res.json())
           .then(() => {
-            // Call the onDeleteNote callback with the noteId to remove it from the state
             onDeleteNote(note.noteId);
           })
           .catch((error) => {
@@ -54,7 +53,7 @@ function Note({ note, onDeleteNote, onUpdateNotes }) {
 
   const closePopup = () => {
     setIsPopupOpen(false);
-    document.activeElement.blur(); // Remove focus from the currently focused element
+    document.activeElement.blur();
   };
 
   return (

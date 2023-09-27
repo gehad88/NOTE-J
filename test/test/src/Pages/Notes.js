@@ -13,6 +13,8 @@ function Notes() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const cookie = Cookies.get("userId");
 
   const deleteNote = (noteIdToRemove) => {
@@ -58,12 +60,23 @@ function Notes() {
     return null;
   }
 
+  const handleSearch = (ev) => {
+    const value = ev.target.value;
+    setSearchQuery(value);
+  };
+
+  const filteredNotes = notes.filter(
+    (note) =>
+      note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Fragment>
       <Menu />
       <section className="blog_section layout_padding">
         <div className="container">
-          <div className="heading_container">
+          <div className="heading_container" style={{ marginTop: "-70px" }}>
             <h2>Your Notes</h2>
             <div className="search-box">
               <button className="btn-search">
@@ -71,8 +84,9 @@ function Notes() {
               </button>
               <input
                 type="text"
-                class="input-search"
+                className="input-search"
                 placeholder="Type to Search..."
+                onChange={handleSearch}
               />
             </div>
           </div>
@@ -84,8 +98,8 @@ function Notes() {
             </div>
           </div>
           <div className="row">
-            {notes.map((note) => (
-              <div key={`note_${note.noteId}`} className="col-md-6 col-lg-4">
+            {filteredNotes.map((note) => (
+              <div key={`note_${note.noteId}`} className="col-md-6 col-lg-3">
                 <Note
                   key={`note_${note.noteId}`}
                   note={note}

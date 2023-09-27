@@ -5,12 +5,14 @@ import Category from "../Component/CATEGORY/Category";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import AddCatPopup from "../Component/CATEGORY/AddCatPopUp";
+import img3 from "../Component/Styles/Images//loupe (1).png";
 
 function Categories() {
   console.log("Categories");
   const [categories, setCategories] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const userIdCookie = Cookies.get("userId");
 
   const deleteCategory = (categoryIdToRemove) => {
@@ -61,13 +63,33 @@ function Categories() {
     return null;
   }
 
+  const handleSearch = (ev) => {
+    const value = ev.target.value;
+    setSearchQuery(value);
+  };
+
+  const filteredCat = categories.filter((note) =>
+    note.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Fragment>
       <Menu />
       <section className="blog_section layout_padding">
         <div className="container">
-          <div className="heading_container">
+          <div className="heading_container" style={{ marginTop: "-70px" }}>
             <h2>Categories</h2>
+            <div className="search-box">
+              <button className="btn-search">
+                <img src={img3} style={{ width: "30px" }} alt="Search" />
+              </button>
+              <input
+                type="text"
+                className="input-search"
+                placeholder="Type to Search..."
+                onChange={handleSearch}
+              />
+            </div>
           </div>
           <div className="row">
             <div className="col-md-12">
@@ -77,7 +99,7 @@ function Categories() {
             </div>
           </div>
           <div className="row">
-            {categories.map((category) => (
+            {filteredCat.map((category) => (
               <div
                 key={`category_${category.categoryId}`}
                 className="col-md-6 col-lg-4"
