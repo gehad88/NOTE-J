@@ -30,7 +30,11 @@ const CategoryDetails = ({ isOpen, onClose, category, onUpdateCat }) => {
         image: image,
       })
       .then((response) => {
-        console.log("category edited successfully:", response.data);
+        console.log(
+          "category edited successfully:",
+          response.data,
+          response.status
+        );
 
         const updatedCategory = {
           ...category,

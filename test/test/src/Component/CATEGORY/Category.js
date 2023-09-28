@@ -6,11 +6,13 @@ import Cookies from "js-cookie";
 import CategoryDetails from "./CategoryDetails.js";
 import "../Styles/ReadMoreButton.css";
 import "../Styles/ViewNotesButton.css";
+import defaultImage from "../Styles/Images/noteImage.jpg";
 
 function Category({ category, onDeleteCategory, onUpdateCategories }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(true);
   const [notesLen, setNotesLen] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,28 +32,36 @@ function Category({ category, onDeleteCategory, onUpdateCategories }) {
   }
 
   const deleteCategory = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((data) => {
-      if (data.isConfirmed) {
-        fetch(`https://localhost:44317/api/Category/${category.categoryId}`, {
-          method: "DELETE",
-        })
-          .then((res) => res.json())
-          .then(() => {
-            onDeleteCategory(category.categoryId);
+    if (notesLen === 0) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((data) => {
+        if (data.isConfirmed) {
+          fetch(`https://localhost:44317/api/Category/${category.categoryId}`, {
+            method: "DELETE",
           })
-          .catch((error) => {
-            console.error("Error deleting category:", error);
-          });
-      }
-    });
+            .then((res) => res.json())
+            .then(() => {
+              onDeleteCategory(category.categoryId);
+            })
+            .catch((error) => {
+              console.error("Error deleting category:", error);
+            });
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Sorry , you can not delete this category!",
+      });
+    }
   };
 
   const openPopup = () => {
@@ -66,7 +76,12 @@ function Category({ category, onDeleteCategory, onUpdateCategories }) {
   return (
     <div className="box">
       <div className="img-box">
-        <img src="images/b1.jpg" alt="" />
+        <img
+          src={`https://localhost:44317/Images/${
+            category.categoryImage || defaultImage
+          }`}
+          alt="none"
+        />
       </div>
       <div className="detail-box">
         <h5>{category.categoryName}</h5>

@@ -170,16 +170,18 @@ const AddNotePopup = ({ isOpen, onClose, onAddNote }) => {
                 {content.length}/{MAX_CONTENT_LENGTH}
               </div>
             </div>
+            {
+              <div className="input-group">
+                <label>Upload Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="input-field"
+                />
+              </div>
+            }
 
-            <div className="input-group">
-              <label>Upload Image</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="input-field"
-              />
-            </div>
             <br />
 
             <div className="button-group">

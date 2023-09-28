@@ -9,15 +9,33 @@ const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
   console.log("AddNotePopup");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
+  const [imageSrc, setImageSrc] = useState(
+    "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  );
+  const [imageFile, setImageFile] = useState("");
   const userIdCookie = Cookies.get("userId");
+  const defaultImage =
+    "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80";
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
-
   const handleImageChange = (e) => {
-    const selectedImage = e.target.files[0];
-    setImage(selectedImage);
+    if (e.target.files && e.target.files[0]) {
+      const newImageFile = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (x) => {
+        setImageFile(newImageFile);
+        setImageSrc(x.target.result);
+      };
+      reader.readAsDataURL(newImageFile);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (x) => {
+        setImageSrc(defaultImage);
+      };
+      reader.readAsDataURL(imageFile);
+    }
   };
 
   const handleSubmit = () => {
@@ -31,11 +49,22 @@ const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
     const newCatData = {
       userId: parseInt(userIdCookie),
       categoryName: title,
-      image,
+      categoryImage: imageSrc,
+      imgaeFile: imageFile,
     };
 
+    const formData = new FormData();
+    formData.append("userId", parseInt(userIdCookie));
+    formData.append("categoryName", title);
+    formData.append("categoryImage", imageSrc);
+    formData.append("imageFile", imageFile);
+
     axios
-      .post("https://localhost:44317/api/Category/", newCatData)
+      .post("https://localhost:44317/api/Category/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
         console.log("Note added successfully:", response.data);
         Swal.fire({
@@ -62,6 +91,11 @@ const AddCatPopup = ({ isOpen, onClose, onAddCategory }) => {
         <div className="popup">
           <div className="message-box">
             <div className="input-row">
+              <img
+                alt="h"
+                src={imageSrc}
+                style={{ width: "50px", height: "50px" }}
+              />
               <div className="input-half">
                 <label>Title</label>
                 <input

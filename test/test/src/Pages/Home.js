@@ -2,6 +2,9 @@ import React, { Fragment } from "react";
 import Menu from "../Component/Menu";
 import Footer from "../Component/Footer";
 import { Link } from "react-router-dom";
+import img1 from "../Component/Styles/Images/n1.jpg";
+import img2 from "../Component/Styles/Images/aboutus.jpg";
+import img from "../Component/Styles/Images/108103.jpg";
 
 function Home() {
   return (
@@ -21,14 +24,10 @@ function Home() {
                     <div className="col-md-5">
                       <div className="detail-box">
                         <h1>
-                          For All Your <br />
-                          Furniture Needs
+                          Express <br />
+                          What You Think
                         </h1>
-                        <p>
-                          Lorem ipsum, dolor sit amet consectetur adipisicing
-                          elit. Minus quidem maiores perspiciatis, illo maxime
-                          voluptatem a itaque suscipit.
-                        </p>
+                        <p>Now You Can add your notes , categories</p>
                         <div className="btn-box">
                           <Link to="/Contact" className="btn1">
                             Contact Us
@@ -41,86 +40,13 @@ function Home() {
                     </div>
                     <div className="col-md-7">
                       <div className="img-box">
-                        <img src="images/slider-img.png" alt="" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="carousel-item">
-                <div className="container ">
-                  <div className="row">
-                    <div className="col-md-5">
-                      <div className="detail-box">
-                        <h1>
-                          For All Your <br />
-                          Furniture Needs
-                        </h1>
-                        <p>
-                          Lorem ipsum, dolor sit amet consectetur adipisicing
-                          elit. Minus quidem maiores perspiciatis, illo maxime
-                          voluptatem a itaque suscipit.
-                        </p>
-                        <div className="btn-box">
-                          <Link to="/Contact" className="btn1">
-                            Contact Us
-                          </Link>
-                          <Link to="/About" className="btn2">
-                            About Us
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-7">
-                      <div className="img-box">
-                        <img src="images/slider-img.png" alt="" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="carousel-item">
-                <div className="container ">
-                  <div className="row">
-                    <div className="col-md-5">
-                      <div className="detail-box">
-                        <h1>
-                          For All Your <br />
-                          Furniture Needs
-                        </h1>
-                        <p>
-                          Lorem ipsum, dolor sit amet consectetur adipisicing
-                          elit. Minus quidem maiores perspiciatis, illo maxime
-                          voluptatem a itaque suscipit.
-                        </p>
-                        <div className="btn-box">
-                          <Link to="/Contact" className="btn1">
-                            Contact Us
-                          </Link>
-                          <Link to="/About" className="btn2">
-                            About Us
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-7">
-                      <div className="img-box">
-                        <img src="images/slider-img.png" alt="" />
+                        <img src={img1} alt="" />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <ol className="carousel-indicators">
-              <li
-                data-target="#customCarousel"
-                data-slide-to="0"
-                className="active"
-              ></li>
-              <li data-target="#customCarousel" data-slide-to="1"></li>
-              <li data-target="#customCarousel" data-slide-to="2"></li>
-            </ol>
           </div>
         </section>
       </div>
@@ -130,7 +56,7 @@ function Home() {
           <div className="row">
             <div className="col-md-6">
               <div className="img-box">
-                <img src="images/about-img.png" alt="" />
+                <img src={img2} alt="" />
               </div>
             </div>
             <div className="col-md-6">
@@ -139,10 +65,8 @@ function Home() {
                   <h2>About Us</h2>
                 </div>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Corrupti dolorem eum consequuntur ipsam repellat dolor soluta
-                  aliquid laborum, eius odit consectetur vel quasi in quidem,
-                  eveniet ab est corporis tempore.
+                  This is my first porject to try to apply the basics of Backend
+                  (using .NET) and basics of Frontend (using React JS)
                 </p>
                 <a href="/">Read More</a>
               </div>
@@ -154,7 +78,7 @@ function Home() {
       <section className="client_section layout_padding-bottom">
         <div className="container">
           <div className="heading_container">
-            <h2>Testimonial</h2>
+            <h2>Team member</h2>
           </div>
           <div
             id="carouselExample2Controls"
@@ -167,7 +91,7 @@ function Home() {
                   <div className="col-md-11 col-lg-10 mx-auto">
                     <div className="box">
                       <div className="img-box">
-                        <img src="images/client.jpg" alt="" />
+                        <img src={img} alt="" />
                       </div>
                       <div className="detail-box">
                         <div className="name">
@@ -175,7 +99,7 @@ function Home() {
                             className="fa fa-quote-left"
                             aria-hidden="true"
                           ></i>
-                          <h6>Siaalya</h6>
+                          <h6>Gehad Omar</h6>
                         </div>
                         <p>
                           It is a long established fact that a reader will be

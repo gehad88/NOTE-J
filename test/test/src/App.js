@@ -9,6 +9,7 @@ import SignUp from "./Pages/SignUp";
 import NotFound from "./Pages/NotFound";
 import NoteDetails from "./Component/NOTE/NoteDetails";
 import InstaNotFound from "./Pages/InstaNotFound";
+import Test from "./Component/Test";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/NotFound" element={<NotFound />}></Route>
           <Route path="/Notes/NoteDetails/:noteId" element={<NoteDetails />} />
           <Route path="/InstaNotFound" element={<InstaNotFound />}></Route>
+          <Route path="/test" element={<Test />}></Route>
         </Routes>
       </Router>
     </div>
